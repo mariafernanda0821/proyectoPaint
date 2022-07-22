@@ -14,11 +14,14 @@ function App() {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
-    const [lineWidth, setLineWidth] = useState(5);
+    const [lineWidth, setLineWidth] = useState(1);
     const [lineColor, setLineColor] = useState("black");
     const [lineOpacity, setLineOpacity] = useState(0.1);
 
     const [borrador, setBorrador]= useState(false);
+    const [lapiz, setLapiz]= useState(false);
+    const [cambiarImagen, setCambiarImagen] = useState(null);
+
     // Initialization when the component
     // mounts for the first time
 
@@ -36,12 +39,22 @@ function App() {
 
     // Function for starting the drawing
     const startDrawing = (e) => {
-        ctxRef.current.beginPath();
-        ctxRef.current.moveTo(
-            e.nativeEvent.offsetX,
-            e.nativeEvent.offsetY
-        );
-        setIsDrawing(true);
+        if(lapiz){
+            ctxRef.current.beginPath();
+            ctxRef.current.moveTo(
+                e.nativeEvent.offsetX,
+                e.nativeEvent.offsetY
+            );
+            setIsDrawing(true);
+        }
+        if(borrador){
+            ctxRef.current.beginPath();
+            ctxRef.current.moveTo(
+                e.nativeEvent.offsetX,
+                e.nativeEvent.offsetY
+            );
+            setIsDrawing(true);
+        }
     };
 
     // Function for ending the drawing
@@ -75,6 +88,28 @@ function App() {
         }
     }, []);
 
+    useEffect(() => {
+        console.log("cambiarImagen cambiarImagen", ctxRef);
+        const searchImagen = document.getElementById("myImagen");
+        searchImagen.src = cambiarImagen;
+        searchImagen.onload = function () {
+            ctxRef.current.canvas.getContext("2d").drawImage(searchImagen, 0, -200, 1280, 1000);
+        }
+
+    }, [cambiarImagen]);
+
+  
+    /* useEffect(() => {
+        if(borrador){
+            document.getElementById("myCanvas").style.cursor = `url(${Borrador}), default`;
+            console.log("entre al if Borrador true =====>", borrador);
+            //ctxRef.current.clearReact(0, 0, 10, 10);
+        
+        }
+        console.log("Borrador =====>", borrador);
+        return;
+    }, [borrador]);
+ */
     return (
         <>
             <div className="draw-area">
@@ -82,18 +117,23 @@ function App() {
                     setLineColor={setLineColor}
                     setLineWidth={setLineWidth}
                     setLineOpacity={setLineOpacity}
+                    setBorrador={setBorrador}
                     borrador={borrador}
+                    lapiz={lapiz} 
+                    setLapiz={setLapiz}
+                    //cambiarImagen={cambiarImagen}
+                    setCambiarImagen={setCambiarImagen}
                 />
             </div>
-            <div style={{ width: "98%", /* height: "100%" */ border: "1px blue solid", margin: "10px", display: "flex", flexDirection: "column" }}>
+            <div style={{ width: "100%", /* height: "100%" border: "1px blue solid" */ marginTop: "20px", display: "flex", flexDirection: "column" }}>
                 <canvas
                     id="myCanvas"
                     onMouseDown={startDrawing}
                     onMouseUp={endDrawing}
                     onMouseMove={draw}
                     ref={canvasRef}
-                    width={`1280px`}
-                    height={`720px`}
+                    width={`1280`}
+                    height={`720`}
                 />
                 <Amcharts />
                 {/* <img src={MapaMundial} id="myMapa" styles={{display:"none"}}/> */}
