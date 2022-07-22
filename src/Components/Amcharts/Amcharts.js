@@ -204,6 +204,8 @@ const MapaMundial = () => {
 
         // Create the map chart
     // https://www.amcharts.com/docs/v5/charts/map-chart/
+
+
     const chart = root.container.children.push(
       am5map.MapChart.new(root, {
         panX: "rotateX",
