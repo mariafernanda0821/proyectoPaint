@@ -23,11 +23,14 @@ const Menu = ({
 					accept="image/png, image/jpeg"
 					onChange={(e) => {
 						let reader = new FileReader();
+						
+						reader.readAsDataURL(e.target.files[0]);
 
-						const url = reader.readAsDataURL(e.target.files[0]);
- 
-						setCambiarImagen(url)
+						reader.onload = () => {
+							console.log("entre onChange set cambiar imagen", reader.result);
+							setCambiarImagen(reader.result)
 
+						}
 					}}
 				/* style={{display:"none"}} */
 				/>
@@ -69,13 +72,26 @@ const Menu = ({
 
 			</div>
 			<div className="ContainerOpcion">
-				<label>Borrador</label>
-				<img src={Borrador} width="50px" height="50px" onClick={() => { setBorrador(!borrador) }} />
+				<label> Limpiar</label>
+				<img src={Borrador} width="50px" height="50px" onClick={() => {
+					setBorrador(!borrador);
+					if (lapiz) {
 
+						setLapiz(!lapiz)
+					}
+				}
+				}
+				/>
 			</div>
 			<div className="ContainerOpcion">
 				<label>Lapiz</label>
-				<img src={Lapiz} width="50px" height="50px" onClick={() => { setLapiz(!lapiz) }} />
+				<img src={Lapiz} width="50px" height="50px" onClick={() => {
+					setLapiz(!lapiz)
+					if (borrador) {
+						setBorrador(!borrador)
+					}
+
+				}} />
 
 			</div>
 
